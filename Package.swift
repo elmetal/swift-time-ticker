@@ -4,21 +4,28 @@
 import PackageDescription
 
 let package = Package(
-    name: "swift-time-ticker",
+    name: "TimeTicker",
+    platforms: [
+        .iOS(.v13),
+        .macOS(.v10_15),
+        .tvOS(.v13),
+        .watchOS(.v6),
+        .visionOS(.v1)
+    ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "swift-time-ticker",
-            targets: ["swift-time-ticker"]),
+            name: "TimeTicker",
+            targets: ["TimeTicker"]),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "swift-time-ticker"),
+            name: "TimeTicker"),
         .testTarget(
-            name: "swift-time-tickerTests",
-            dependencies: ["swift-time-ticker"]
+            name: "TimeTickerTests",
+            dependencies: ["TimeTicker"]
         ),
     ]
 )
