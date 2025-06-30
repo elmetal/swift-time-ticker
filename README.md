@@ -21,3 +21,6 @@ dependencies: [
 ```
 
 Or add it through Xcode by going to File → Add Package Dependencies and entering the repository URL.
+
+## License
+MIT
