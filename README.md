@@ -22,5 +22,20 @@ dependencies: [
 
 Or add it through Xcode by going to File → Add Package Dependencies and entering the repository URL.
 
+## Usage
+
+```swift
+import TimeTicker
+
+// Create a ticker that emits events every second
+let ticker = TimeTicker(interval: .seconds(1))
+
+// Receive time events using async/await
+for try await timeEvent in ticker.events() {
+    print("Current time: \(timeEvent.date)")
+    print("Unix timestamp: \(timeEvent.timestamp)")
+}
+```
+
 ## License
 MIT
