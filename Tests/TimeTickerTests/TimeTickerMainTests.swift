@@ -28,7 +28,7 @@ func testTimeTickerBasicTicking() async throws {
 @Test("TimeTicker should respect custom intervals")
 func testTimeTickerCustomInterval() async throws {
     // Given
-    let customInterval = TimeInterval(0.05) // 50ms
+    let customInterval = TimeInterval(0.1) // 100ms
     let ticker = TimeTicker(interval: .custom(customInterval))
     var eventTimes: [Date] = []
     
