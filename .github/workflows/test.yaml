@@ -8,16 +8,16 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: macos-15
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Setup Swift
-      uses: swift-actions/setup-swift@v2
-      with:
-        swift-version: '6.1'
+#    - name: Setup Swift
+#      uses: swift-actions/setup-swift@v2
+#      with:
+#        swift-version: '6.1'
     
     - name: Run tests
       run: |
@@ -29,7 +29,7 @@ jobs:
         BIN_PATH="$(swift build --configuration debug --show-bin-path)"
         echo "bin path: $BIN_PATH"
   
-        llvm-cov report \
+        xcrun llvm-cov report \
           "$BIN_PATH"/* \
           -instr-profile "$PROFDATA" \
           -ignore-filename-regex='(.build|/Tests/)' \
