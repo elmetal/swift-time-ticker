@@ -20,6 +20,8 @@ jobs:
 #        swift-version: '6.1'
     
     - name: Run tests
+      env:
+        DEVELOPER_DIR: "/Applications/Xcode_16.4.app/Contents/Developer"
       run: |
         swift test --enable-code-coverage
 
