@@ -8,16 +8,45 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: macos-15
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Setup Swift
-      uses: swift-actions/setup-swift@v2
-      with:
-        swift-version: '6.1'
+#    - name: Setup Swift
+#      uses: swift-actions/setup-swift@v2
+#      with:
+#        swift-version: '6.1'
     
     - name: Run tests
-      run: swift test 
+      env:
+        DEVELOPER_DIR: "/Applications/Xcode_16.4.app/Contents/Developer"
+      run: |
+        swift test --enable-code-coverage
+
+        BIN_PATH="$(swift build --configuration debug --show-bin-path)"
+        XCTEST_PATH=`find $BIN_PATH -name '*.xctest'`
+  
+        COV_BIN=$XCTEST_PATH
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+        	f=`basename $XCTEST_PATH .xctest`
+        	COV_BIN=$COV_BIN/Contents/MacOS/$f
+        fi
+
+        xcrun llvm-cov report \
+          $COV_BIN \
+          -instr-profile .build/debug/codecov/default.profdata \
+          -ignore-filename-regex='(.build|/Tests/)' \
+          -use-color | tee coverage-report.txt
+  
+        TOTAL=$(grep -E '^TOTAL' coverage-report.txt | awk '{print $NF}')
+        {
+          echo "## SwiftPM Coverage"
+          echo ""
+          echo "Total line coverage: $TOTAL"
+          echo ""
+          echo '```'
+          cat coverage-report.txt
+          echo '```'
+        } >> "$GITHUB_STEP_SUMMARY"

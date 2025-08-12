@@ -28,26 +28,34 @@ func testTimeTickerBasicTicking() async throws {
 @Test("TimeTicker should respect custom intervals")
 func testTimeTickerCustomInterval() async throws {
     // Given
-    let customInterval = TimeInterval(0.05) // 50ms
+    let customInterval = TimeInterval(0.2) // 200ms
     let ticker = TimeTicker(interval: .custom(customInterval))
-    let startTime = Date()
-    var timestamps: [TimeInterval] = []
+    var eventTimes: [Date] = []
     
-    // When - collect 2 events to measure interval
-    for try await event in ticker.events().prefix(2) {
-        timestamps.append(event.date.timeIntervalSince(startTime))
+    // When - collect 3 events to measure intervals between them
+    for try await event in ticker.events().prefix(3) {
+        eventTimes.append(event.date)
     }
     
     // Then
-    #expect(timestamps.count == 2)
+    #expect(eventTimes.count == 3)
     
-    // Verify interval timing (with some tolerance for system scheduling)
-    if timestamps.count >= 2 {
-        let actualInterval = timestamps[1] - timestamps[0]
-        let tolerance = customInterval * 0.5 // 50% tolerance
-        #expect(actualInterval >= customInterval - tolerance)
-        #expect(actualInterval <= customInterval + tolerance)
-    }
+    // Verify interval timing between consecutive events
+    // Use reasonable tolerance for CI environments and system scheduling variance
+    let tolerance = customInterval * 0.6 // 60% tolerance for CI environment stability
+    
+    // Check interval between first and second event
+    let interval1 = eventTimes[1].timeIntervalSince(eventTimes[0])
+    let expectedRange = (customInterval - tolerance)...(customInterval + tolerance)
+    #expect(expectedRange.contains(interval1), "First interval \(interval1) should be in range \(expectedRange)")
+    
+    // Check interval between second and third event  
+    let interval2 = eventTimes[2].timeIntervalSince(eventTimes[1])
+    #expect(expectedRange.contains(interval2), "Second interval \(interval2) should be in range \(expectedRange)")
+    
+    // Verify consistency between intervals (they should be similar)
+    let intervalDifference = abs(interval1 - interval2)
+    #expect(intervalDifference <= tolerance, "Interval difference \(intervalDifference) should be <= \(tolerance)")
 }
 
 @Test("TimeTicker should be cancellable")
