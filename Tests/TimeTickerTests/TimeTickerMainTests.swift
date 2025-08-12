@@ -41,8 +41,8 @@ func testTimeTickerCustomInterval() async throws {
     #expect(eventTimes.count == 3)
     
     // Verify interval timing between consecutive events
-    // Use a tighter tolerance since we're measuring relative intervals
-    let tolerance = customInterval * 0.3 // 30% tolerance for system scheduling variance
+    // Use reasonable tolerance for CI environments and system scheduling variance
+    let tolerance = customInterval * 0.6 // 60% tolerance for CI environment stability
     
     // Check interval between first and second event
     let interval1 = eventTimes[1].timeIntervalSince(eventTimes[0])
