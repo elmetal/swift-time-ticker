@@ -46,13 +46,12 @@ func testTimeTickerCustomInterval() async throws {
     
     // Check interval between first and second event
     let interval1 = eventTimes[1].timeIntervalSince(eventTimes[0])
-    #expect(interval1 >= customInterval - tolerance, "First interval \(interval1) should be >= \(customInterval - tolerance)")
-    #expect(interval1 <= customInterval + tolerance, "First interval \(interval1) should be <= \(customInterval + tolerance)")
+    let expectedRange = (customInterval - tolerance)...(customInterval + tolerance)
+    #expect(expectedRange.contains(interval1), "First interval \(interval1) should be in range \(expectedRange)")
     
     // Check interval between second and third event  
     let interval2 = eventTimes[2].timeIntervalSince(eventTimes[1])
-    #expect(interval2 >= customInterval - tolerance, "Second interval \(interval2) should be >= \(customInterval - tolerance)")
-    #expect(interval2 <= customInterval + tolerance, "Second interval \(interval2) should be <= \(customInterval + tolerance)")
+    #expect(expectedRange.contains(interval2), "Second interval \(interval2) should be in range \(expectedRange)")
     
     // Verify consistency between intervals (they should be similar)
     let intervalDifference = abs(interval1 - interval2)
