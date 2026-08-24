@@ -62,10 +62,10 @@ func testTimeTickerCustomInterval() async throws {
 func testTimeTickerCancellation() async throws {
     // Given
     let ticker = TimeTicker(interval: .milliseconds(10))
-    var eventCount = 0
-    
+
     // When
     let task = Task {
+        var eventCount = 0
         do {
             for try await _ in ticker.events().prefix(100) {
                 eventCount += 1
@@ -76,12 +76,14 @@ func testTimeTickerCancellation() async throws {
         } catch {
             // Task was cancelled or other error occurred
         }
+        return eventCount
     }
-    
+
     // Cancel after short delay
     try await Task.sleep(nanoseconds: 50_000_000) // 50ms
     task.cancel()
-    
+    let eventCount = await task.value
+
     // Then
     #expect(eventCount >= 1) // Should have received at least one event
     #expect(eventCount <= 10) // Should not have received too many due to cancellation
