@@ -7,7 +7,7 @@ import Foundation
 ///
 /// Use `TimeTicker` to create digital clocks, periodic timers, or any application
 /// that requires regular time updates with Swift's native async/await patterns.
-public class TimeTicker {
+public final class TimeTicker: Sendable {
     private let interval: TickInterval
     
     /// Creates a new time ticker with the specified interval.

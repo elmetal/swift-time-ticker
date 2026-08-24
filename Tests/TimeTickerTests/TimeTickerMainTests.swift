@@ -87,4 +87,18 @@ func testTimeTickerCancellation() async throws {
     // Then
     #expect(eventCount >= 1) // Should have received at least one event
     #expect(eventCount <= 10) // Should not have received too many due to cancellation
-} 
+}
+
+@Test("TimeTicker should be shareable across concurrent tasks")
+func testTimeTickerSendability() async throws {
+    // Given
+    let ticker = TimeTicker(interval: .milliseconds(10))
+
+    // When - consume events from the same ticker in two concurrent tasks
+    async let firstEvent = ticker.events().first { _ in true }
+    async let secondEvent = ticker.events().first { _ in true }
+    let events = try await [firstEvent, secondEvent]
+
+    // Then
+    #expect(events.allSatisfy { $0 != nil })
+}

@@ -7,7 +7,7 @@ import Foundation
 ///
 /// Time events are immutable value types that maintain consistency between their
 /// date and timestamp representations.
-public struct TimeEvent {
+public struct TimeEvent: Sendable {
     /// The date and time when this event occurred.
     ///
     /// This property provides access to Swift's `Date` type for calendar operations,

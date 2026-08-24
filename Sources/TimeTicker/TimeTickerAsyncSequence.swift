@@ -13,7 +13,7 @@ import Foundation
 ///     // Process time event
 /// }
 /// ```
-public struct TimeTickerAsyncSequence: AsyncSequence {
+public struct TimeTickerAsyncSequence: AsyncSequence, Sendable {
     public typealias Element = TimeEvent
     
     private let interval: TickInterval

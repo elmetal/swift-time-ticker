@@ -5,7 +5,7 @@ import Foundation
 /// `TickInterval` provides convenient ways to specify time intervals using
 /// predefined units or custom durations. All intervals are internally converted
 /// to `TimeInterval` values and enforce a minimum threshold for system stability.
-public enum TickInterval {
+public enum TickInterval: Sendable {
     /// An interval specified in whole seconds.
     ///
     /// - Parameter Int: The number of seconds between events.
